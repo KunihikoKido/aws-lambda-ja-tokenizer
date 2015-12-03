@@ -1,0 +1,13 @@
+*.pyc
+.gitignore
+bundle.zip
+requirements.txt
+event.json
+local_settings.py
+exclude.lst
+.git/*
+lib/*
+dist/*
+local/bin/*
+local/share/*
+README.md

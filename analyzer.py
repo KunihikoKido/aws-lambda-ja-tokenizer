@@ -9,16 +9,11 @@ rcfile = os.path.join(os.getcwd(), 'local', 'etc', 'mecabrc')
 
 DEFAULT_STOPTAGS = ['BOS/EOS']
 
+get_part_of_speech = lambda s: '-'.join([v for v in s.split(',')[:4] if v != '*'])
+get_reading = lambda s: s.split(',')[7]
+get_base_form = lambda s: s.split(',')[6]
+
 def analyze(sentence, stoptags=[]):
-    def pos(feature):
-        return "-".join([v for v in feature.split(',')[:4] if not v is "*"])
-
-    def reading(feature):
-        return feature.split(',')[7]
-
-    def baseform(feature):
-        return m.feature.split(',')[6]
-
     stoptags += DEFAULT_STOPTAGS
 
     t = MeCab.Tagger("-d{} -r{}".format(dicdir, rcfile))
@@ -26,20 +21,27 @@ def analyze(sentence, stoptags=[]):
 
     tokens = []
     while m:
-        if pos(m.feature) not in stoptags:
-            tokens.append({
-                "surface": m.surface,
-                "feature": m.feature,
-                "reading": reading(m.feature),
-                "pos": pos(m.feature),
-                "baseform": baseform(m.feature),
-            })
+        part_of_speech = get_part_of_speech(m.feature)
+        reading = get_reading(m.feature)
+        base_form = get_base_form(m.feature)
+
+        token = {
+            "surface": m.surface,
+            "feature": m.feature,
+            "pos": part_of_speech,
+            "reading": reading,
+            "baseform": base_form,
+        }
+
+        if part_of_speech not in stoptags:
+            tokens.append(token)
         m = m.next
-    return json.dumps(tokens, ensure_ascii=False, indent=2)
+
+    return tokens
 
 
 if __name__ == '__main__':
     sentence = sys.argv[1]
     stoptags = sys.argv[2].split(',')
     tokens = analyze(sentence, stoptags)
-    print(tokens)
+    print(json.dumps(tokens, ensure_ascii=False, indent=2))
