@@ -37,7 +37,7 @@ def install_mecab_ipadic():
                 local('make && make install')
 
 def install_mecab_python():
-    with shell_env(LD_LIBRARY_PATH=MECAB_LIB):
+    with path(os.path.join(MECAB_HOME, 'bin'), behavior='prepend'):
         local('pip install --upgrade -r requirements.txt -t {}'.format(LIB_PATH))
 
 # fab commands
