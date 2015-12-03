@@ -28,17 +28,22 @@ def install_mecab():
             local('make && make install')
 
 def install_mecab_ipadic():
-    with path(os.path.join(MECAB_HOME, 'bin'), behavior='prepend'):
-        with lcd(DIST_DIR):
-            local('wget http://mecab.googlecode.com/files/mecab-ipadic-2.7.0-20070801.tar.gz')
-            local('tar zvxf mecab-ipadic-2.7.0-20070801.tar.gz')
-            with lcd(os.path.join(DIST_DIR, 'mecab-ipadic-2.7.0-20070801')):
-                local('./configure --prefix={} --with-charset=utf-8'.format(BASE_PATH))
-                local('make && make install')
+    with path(os.path.join(MECAB_HOME, 'bin'), behavior='prepend'), lcd(DIST_DIR):
+        local('wget http://mecab.googlecode.com/files/mecab-ipadic-2.7.0-20070801.tar.gz')
+        local('tar zvxf mecab-ipadic-2.7.0-20070801.tar.gz')
+        with lcd(os.path.join(DIST_DIR, 'mecab-ipadic-2.7.0-20070801')):
+            local('./configure --prefix={} --with-charset=utf-8'.format(MECAB_HOME))
+            local('make && make install')
 
 def install_mecab_python():
-    with path(os.path.join(MECAB_HOME, 'bin'), behavior='prepend'):
-        local('pip install --upgrade -r requirements.txt -t {}'.format(LIB_PATH))
+    with path(os.path.join(MECAB_HOME, 'bin'), behavior='prepend'), lcd(DIST_DIR):
+        local('wget https://mecab.googlecode.com/files/mecab-python-0.996.tar.gz')
+        local('tar zvxf mecab-python-0.996.tar.gz')
+        with lcd(os.path.join(DIST_DIR, 'mecab-python-0.996')):
+            local('python setup.py install --install-lib={}'.format(LIB_PATH))
+
+    # with path(os.path.join(MECAB_HOME, 'bin'), behavior='prepend'):
+    #     local('pip install --upgrade -r requirements.txt -t {}'.format(LIB_PATH))
 
 # fab commands
 def setup():
