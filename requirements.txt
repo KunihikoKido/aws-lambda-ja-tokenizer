@@ -1,3 +1,1 @@
-fabric
-python-lambda-local
 https://mecab.googlecode.com/files/mecab-python-0.996.tar.gz
