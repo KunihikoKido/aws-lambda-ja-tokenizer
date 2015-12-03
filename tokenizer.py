@@ -13,7 +13,7 @@ get_part_of_speech = lambda s: '-'.join([v for v in s.split(',')[:4] if v != '*'
 get_reading = lambda s: s.split(',')[7]
 get_base_form = lambda s: s.split(',')[6]
 
-def analyze(sentence, stoptags=[]):
+def tokenize(sentence, stoptags=[]):
     stoptags += DEFAULT_STOPTAGS
 
     t = MeCab.Tagger("-d{} -r{}".format(dicdir, rcfile))
@@ -37,11 +37,11 @@ def analyze(sentence, stoptags=[]):
             tokens.append(token)
         m = m.next
 
-    return tokens
+    return {"tokens": tokens}
 
 
 if __name__ == '__main__':
     sentence = sys.argv[1]
     stoptags = sys.argv[2].split(',')
-    tokens = analyze(sentence, stoptags)
+    tokens = tokenize(sentence, stoptags)
     print(json.dumps(tokens, ensure_ascii=False, indent=2))
