@@ -35,6 +35,10 @@ def install_mecab_ipadic():
             local('./configure --prefix={} --with-charset=utf-8'.format(MECAB_HOME))
             local('make && make install')
 
+def install_requirements():
+    with path(os.path.join(MECAB_HOME, 'bin'), behavior='prepend'):
+        local('pip install -r requirements.txt')
+
 # def install_mecab_python():
 #     with path(os.path.join(MECAB_HOME, 'bin'), behavior='prepend'), lcd(DIST_DIR):
 #         local('wget https://mecab.googlecode.com/files/mecab-python-0.996.tar.gz')
@@ -52,6 +56,7 @@ def setup():
 
     install_mecab()
     install_mecab_ipadic()
+    install_requirements()
     # install_mecab_python()
 
 def invoke():
