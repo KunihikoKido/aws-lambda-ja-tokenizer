@@ -35,12 +35,12 @@ def install_mecab_ipadic():
             local('./configure --prefix={} --with-charset=utf-8'.format(MECAB_HOME))
             local('make && make install')
 
-def install_mecab_python():
-    with path(os.path.join(MECAB_HOME, 'bin'), behavior='prepend'), lcd(DIST_DIR):
-        local('wget https://mecab.googlecode.com/files/mecab-python-0.996.tar.gz')
-        local('tar zvxf mecab-python-0.996.tar.gz')
-        with lcd(os.path.join(DIST_DIR, 'mecab-python-0.996')):
-            local('python setup.py install --install-lib={}'.format(LIB_PATH))
+# def install_mecab_python():
+#     with path(os.path.join(MECAB_HOME, 'bin'), behavior='prepend'), lcd(DIST_DIR):
+#         local('wget https://mecab.googlecode.com/files/mecab-python-0.996.tar.gz')
+#         local('tar zvxf mecab-python-0.996.tar.gz')
+#         with lcd(os.path.join(DIST_DIR, 'mecab-python-0.996')):
+#             local('python setup.py install --install-lib={}'.format(LIB_PATH))
 
     # with path(os.path.join(MECAB_HOME, 'bin'), behavior='prepend'):
     #     local('pip install --upgrade -r requirements.txt -t {}'.format(LIB_PATH))
@@ -52,7 +52,7 @@ def setup():
 
     install_mecab()
     install_mecab_ipadic()
-    install_mecab_python()
+    # install_mecab_python()
 
 def invoke():
     local("python-lambda-local -l {} -f {} {} {}".format(
@@ -63,5 +63,8 @@ def bundle():
         local('rm -f {}'.format(ZIP_FILE))
         local('zip -r9 {} * -x @{}'.format(ZIP_FILE, ZIP_EXCLUDE_FILE))
 
-    with lcd(LIB_PATH):
+    with lcd('$VIRTUAL_ENV/lib/python2.7/dist-packages'):
+        local('zip -r9 {} * -x @{}'.format(ZIP_FILE, ZIP_EXCLUDE_FILE))
+
+    with lcd('$VIRTUAL_ENV/lib/python2.7/site-packages'):
         local('zip -r9 {} * -x @{}'.format(ZIP_FILE, ZIP_EXCLUDE_FILE))
