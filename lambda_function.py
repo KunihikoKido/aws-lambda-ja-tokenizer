@@ -13,4 +13,4 @@ def lambda_handler(event, context):
 
     cmd = 'LD_LIBRARY_PATH={} python tokenizer.py "{}" "{}"'.format(libdir, sentence, stoptags)
     tokens = subprocess.check_output(cmd, shell=True)
-    return tokens
+    return json.loads(tokens)

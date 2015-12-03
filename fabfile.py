@@ -2,7 +2,7 @@ import os
 print os.getcwd()
 import zipfile
 
-from fabric.api import local, shell_env, run, lcd, env
+from fabric.api import local, shell_env, lcd, env
 from fabric.context_managers import path
 
 BASE_PATH = os.getcwd()
@@ -59,7 +59,7 @@ def setup():
     install_requirements()
     # install_mecab_python()
 
-def invoke():
+def run():
     local("python-lambda-local -l {} -f {} {} {}".format(
         LIB_PATH, LAMBDA_HANDER, LAMBDA_FILE, LAMBDA_EVENT))
 
