@@ -5,13 +5,11 @@ requirements.txt
 event.json
 local_settings.py
 exclude.lst
+fabricrc
+fabfile.py
 .git/*
 lib/*
 dist/*
 local/bin/*
 local/share/*
 README.md
-fabric/*
-pip/*
-python_lambda_local*
-setuptools/*
