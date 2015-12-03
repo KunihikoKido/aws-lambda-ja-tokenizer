@@ -42,7 +42,7 @@ def install_mecab_python():
 
 # fab commands
 def setup():
-    if os.path.exists(DIST_DIR):
+    if not os.path.exists(DIST_DIR):
         local('mkdir {}'.format(DIST_DIR))
 
     install_mecab()
