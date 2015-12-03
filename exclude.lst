@@ -11,3 +11,7 @@ dist/*
 local/bin/*
 local/share/*
 README.md
+fabric/*
+pip/*
+python_lambda_local*
+setuptools/*
