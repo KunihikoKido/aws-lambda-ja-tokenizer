@@ -21,9 +21,10 @@ def tokenize(sentence, stoptags=[]):
 
     tokens = []
     while m:
-        part_of_speech = get_part_of_speech(m.feature)
-        reading = get_reading(m.feature)
-        base_form = get_base_form(m.feature)
+        feature = m.feature + ',*,*'
+        part_of_speech = get_part_of_speech(feature)
+        reading = get_reading(feature)
+        base_form = get_base_form(feature)
 
         token = {
             "surface": m.surface,
