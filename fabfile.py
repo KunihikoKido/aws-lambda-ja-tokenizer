@@ -68,8 +68,10 @@ def bundle():
         local('rm -f {}'.format(ZIP_FILE))
         local('zip -r9 {} * -x @{}'.format(ZIP_FILE, ZIP_EXCLUDE_FILE))
 
-    with lcd('$VIRTUAL_ENV/lib/python2.7/dist-packages'):
-        local('zip -r9 {} * -x @{}'.format(ZIP_FILE, ZIP_EXCLUDE_FILE))
+    if os.path.exists('$VIRTUAL_ENV/lib/python2.7/dist-packages'):
+        with lcd('$VIRTUAL_ENV/lib/python2.7/dist-packages'):
+            local('zip -r9 {} * -x @{}'.format(ZIP_FILE, ZIP_EXCLUDE_FILE))
 
-    with lcd('$VIRTUAL_ENV/lib/python2.7/site-packages'):
-        local('zip -r9 {} * -x @{}'.format(ZIP_FILE, ZIP_EXCLUDE_FILE))
+    if os.path.exists('$VIRTUAL_ENV/lib/python2.7/site-packages'):
+        with lcd('$VIRTUAL_ENV/lib/python2.7/site-packages'):
+            local('zip -r9 {} * -x @{}'.format(ZIP_FILE, ZIP_EXCLUDE_FILE))
