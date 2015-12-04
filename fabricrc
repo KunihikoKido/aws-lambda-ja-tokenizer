@@ -1,3 +1,0 @@
-user = ec2-user
-hosts = 52.68.33.92
-key_filename = ~/.ssh/scopekey.pem
