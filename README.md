@@ -1,5 +1,5 @@
-# lambda-ja-tokenizer
-AWS LambdaでMeCabを使うためのサンプルプロジェクトです。
+# Japanese tokenizer for AWS Lambda
+AWS Lambdaで日本語形態素解析（MeCab）を使うためのサンプルプロジェクトです。
 MeCabはコードにネイティブバイナリを使用している為、以下のリンク先を参考にLambda実行環境と同じ環境でコンパイルしてください。(Amazon Linux)
 
 ※ 参考: [Lambda 実行環境と利用できるライブラリ](http://docs.aws.amazon.com/ja_jp/lambda/latest/dg/current-supported-versions.html)
@@ -13,17 +13,26 @@ lambda_function.lambda_handler
 
 #### Input event
 
+* ``sentence``: 形態素解析対象の文字列
+* ``stoptags``: 解析結果から除外したい品詞タグ（※ 複数設定する場合はカンマ区切りで指定可能）
+
+Input event sample:
 ```python
 {
   "sentence": "今日は良い天気です",
   "stoptags": "助詞-係助詞"
 }
 ```
-* ``sentence``: 形態素解析対象の文字列
-* ``stoptags``: 解析結果から除外したい品詞タグ（※ 複数設定する場合はカンマ区切りで指定可能）
 
 #### Execution result
 
+* ``reading``: 読み
+* ``pos``: 品詞（品詞-品詞細分類1-品詞細分類2-品詞細分類3）
+* ``baseform``: 原型
+* ``surface``: 形態素の文字列情報
+* ``feature``:  CSVで表記された素性情報
+
+Execution result sample:
 ```python
 {
   "tokens": [
@@ -73,14 +82,6 @@ lambda_function.lambda_handler
 }
 ```
 
-
-* ``reading``: 読み
-* ``pos``: 品詞（品詞-品詞細分類1-品詞細分類2-品詞細分類3）
-* ``baseform``: 原型
-* ``surface``: 形態素の文字列情報
-* ``feature``:  CSVで表記された素性情報
-
-
 ## Setup on local machine
 ローカルでLambda関数を実行するには、最初に以下のステプで環境をセットアップしてください。
 なお、MeCab本体とIPA辞書は、``./local``配下にインストールされます。
@@ -121,7 +122,7 @@ fab run:custom-event.json
 
 
 ## Make bundle zip
-以下のステップで、AWS Lambda に登録可能な ``bundle.zip`` ファイルが作成されます。
+以下のステップで、AWS Lambda に登録可能な ``lambda_function.zip`` ファイルが作成されます。
 
 ```bash
 # 1. Activate virtualenv

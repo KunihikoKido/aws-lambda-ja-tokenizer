@@ -7,7 +7,7 @@ from fabric.api import local, shell_env, lcd, env, task, settings, path
 BASE_DIR = os.getcwd()
 TEMP_DIR = os.path.join(BASE_DIR, '.tmp')
 
-ZIP_FILE = os.path.join(BASE_DIR, 'bundle.zip')
+ZIP_FILE = os.path.join(BASE_DIR, 'lambda_function.zip')
 ZIP_EXCLUDE_FILE = os.path.join(BASE_DIR, 'exclude.lst')
 
 LAMBDA_HANDER = 'lambda_handler'

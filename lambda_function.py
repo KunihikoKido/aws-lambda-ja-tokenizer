@@ -2,13 +2,27 @@
 import os
 import subprocess
 import json
+import collections
 
 libdir = os.path.join(os.getcwd(), 'local', 'lib')
 
-def lambda_handler(event, context):
-    sentence = event.get('sentence', '').encode('utf-8')
-    stoptags = event.get('stoptags', '').encode('utf-8')
+def force_utf8(data):
+    if isinstance(data, basestring):
+        return data.encode('utf-8')
+    elif isinstance(data, collections.Mapping):
+        return dict(map(force_utf8, data.iteritems()))
+    elif isinstance(data, collections.Iterable):
+        return type(data)(map(force_utf8, data))
+    else:
+        return data
 
-    cmd = 'LD_LIBRARY_PATH={} python tokenizer.py "{}" "{}"'.format(libdir, sentence, stoptags)
-    tokens = subprocess.check_output(cmd, shell=True)
+def lambda_handler(event, context):
+    event = force_utf8(event)
+
+    command = """
+    LD_LIBRARY_PATH={libdir} \
+        python tokenizer.py "{sentence}" "{stoptags}"
+    """.format(libdir=libdir, **event)
+
+    tokens = subprocess.check_output(command, shell=True)
     return json.loads(tokens)

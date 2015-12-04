@@ -16,7 +16,8 @@ get_base_form = lambda s: s.split(',')[6]
 def tokenize(sentence, stoptags=[]):
     stoptags += DEFAULT_STOPTAGS
 
-    t = MeCab.Tagger("-d{} -r{}".format(dicdir, rcfile))
+    option = "-d{dicdir} -r{rcfile}".format(dicdir=dicdir, rcfile=rcfile)
+    t = MeCab.Tagger(option)
     m = t.parseToNode(sentence)
 
     tokens = []
@@ -45,4 +46,4 @@ if __name__ == '__main__':
     sentence = sys.argv[1]
     stoptags = sys.argv[2].split(',')
     tokens = tokenize(sentence, stoptags)
-    print(json.dumps(tokens, ensure_ascii=False, indent=2))
+    print(json.dumps(tokens, ensure_ascii=False))
