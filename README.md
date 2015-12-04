@@ -138,5 +138,9 @@ cd lambda-ja-analyzer
 # 2 Make bundle zip for Lambda function
 fab bundle
 ```
-
 ※ ZIPファイルは10MB超えるので、S3経由アップロードしてください。
+
+## Snapshot Builds
+ビルド済みの``lambda_function.zip``は以下のURLを参照してください。
+
+https://github.com/KunihikoKido/lambda-ja-tokenizer/releases
