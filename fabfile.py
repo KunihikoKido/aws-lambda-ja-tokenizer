@@ -14,7 +14,7 @@ LAMBDA_HANDER = 'lambda_handler'
 LAMBDA_FILE = 'lambda_function.py'
 LAMBDA_EVENT = 'event.json'
 
-INSTALL_PREFIX = os.path.join(BASE_DIR, 'local')
+MECAB_INSTALL_PREFIX = os.path.join(BASE_DIR, 'local')
 
 
 # MeCab
@@ -24,21 +24,21 @@ def install_mecab():
             local('wget http://mecab.googlecode.com/files/mecab-0.996.tar.gz')
             local('tar zvxf mecab-0.996.tar.gz')
         with lcd('mecab-0.996'):
-            local('./configure --prefix={}'.format(INSTALL_PREFIX))
+            local('./configure --prefix={}'.format(MECAB_INSTALL_PREFIX))
             local('make && make install')
 
 
 def install_mecab_ipadic():
-    with path(os.path.join(INSTALL_PREFIX, 'bin'), behavior='prepend'), lcd(TEMP_DIR):
+    with path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'), lcd(TEMP_DIR):
         if not os.path.exists(os.path.join(TEMP_DIR, 'mecab-ipadic-2.7.0-20070801')):
             local('wget http://mecab.googlecode.com/files/mecab-ipadic-2.7.0-20070801.tar.gz')
             local('tar zvxf mecab-ipadic-2.7.0-20070801.tar.gz')
         with lcd('mecab-ipadic-2.7.0-20070801'):
-            local('./configure --prefix={} --with-charset=utf-8'.format(INSTALL_PREFIX))
+            local('./configure --prefix={} --with-charset=utf-8'.format(MECAB_INSTALL_PREFIX))
             local('make && make install')
 
 def install_python_modules():
-    with path(os.path.join(INSTALL_PREFIX, 'bin'), behavior='prepend'), lcd(BASE_DIR):
+    with path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'), lcd(BASE_DIR):
         local('pip install -r requirements.txt')
 
 @task
