@@ -1,4 +1,4 @@
-# Japanese tokenizer for AWS Lambda
+# Japanese Tokenizer for AWS Lambda
 AWS Lambdaで日本語形態素解析（MeCab）を使うためのサンプルプロジェクトです。
 MeCabはコードにネイティブバイナリを使用している為、以下のリンク先を参考にLambda実行環境と同じ環境でコンパイルしてください。(Amazon Linux)
 
