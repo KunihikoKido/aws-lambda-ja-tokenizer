@@ -89,13 +89,17 @@ Execution result sample:
 ```bash
 # 1. Create a virtualenv
 virtualenv env
+
 # 2. Activate the virtualenv
 source ~/env/bin/activate
+
 # 3. Install fabric and python-lambda-local
 pip install fabric
 pip install python-lambda-local
+
 # 4. Clone repository
 git clone https://github.com/KunihikoKido/lambda-ja-analyzer.git
+
 # 5. Install requirements modules
 cd lambda-ja-analyzer
 fab setup
@@ -108,6 +112,7 @@ fab setup
 # 1. Activate virtualenv
 source ~/env/bin/activate
 cd lambda-ja-analyzer
+
 # 2. Run lambda function on local machine
 fab run
 ```
@@ -128,6 +133,7 @@ fab run:custom-event.json
 # 1. Activate virtualenv
 source ~/env/bin/activate
 cd lambda-ja-analyzer
+
 # 2 Make bundle zip for Lambda function
 fab bundle
 ```
