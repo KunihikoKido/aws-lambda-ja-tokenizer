@@ -18,11 +18,16 @@ def force_utf8(data):
 
 def lambda_handler(event, context):
     event = force_utf8(event)
+    params = {
+        "libdir": libdir,
+        "sentence": event.get('sentence', ''),
+        "stoptags": event.get('stoptags', '')
+    }
 
     command = """
     LD_LIBRARY_PATH={libdir} \
         python tokenizer.py "{sentence}" "{stoptags}"
-    """.format(libdir=libdir, **event)
-
+    """.format(**params)
     tokens = subprocess.check_output(command, shell=True)
+
     return json.loads(tokens)
