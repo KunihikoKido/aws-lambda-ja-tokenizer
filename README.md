@@ -5,6 +5,8 @@ MeCabはコードにネイティブバイナリを使用している為、以下
 ※ 参考: [Lambda 実行環境と利用できるライブラリ](http://docs.aws.amazon.com/ja_jp/lambda/latest/dg/current-supported-versions.html)
 
 ## About lambda function
+Amazon API Gateway + Lambda でサーバーレスの形態素解析API作ったりとか、他のLambdaから呼び出して、形態素解析用のファンクションとして使うとか、とかとか。。
+
 #### Runtime
 Python 2.7
 
