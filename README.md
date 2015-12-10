@@ -100,10 +100,10 @@ pip install fabric
 pip install python-lambda-local
 
 # 4. Clone repository
-git clone https://github.com/KunihikoKido/lambda-ja-analyzer.git
+git clone https://github.com/KunihikoKido/aws-lambda-ja-tokenizer.git
 
 # 5. Install requirements modules
-cd lambda-ja-analyzer
+cd aws-lambda-ja-tokenizer
 fab setup
 ```
 
@@ -113,7 +113,7 @@ fab setup
 ```bash
 # 1. Activate virtualenv
 source ~/env/bin/activate
-cd lambda-ja-analyzer
+cd aws-lambda-ja-tokenizer
 
 # 2. Run lambda function on local machine
 fab run
@@ -135,7 +135,7 @@ fab run:custom-event.json
 ```bash
 # 1. Activate virtualenv
 source ~/env/bin/activate
-cd lambda-ja-analyzer
+cd aws-lambda-ja-tokenizer
 
 # 2 Make bundle zip for Lambda function
 fab bundle
@@ -145,4 +145,4 @@ fab bundle
 ## Snapshot Builds
 ビルド済みの``lambda_function.zip``は以下のURLを参照してください。
 
-https://github.com/KunihikoKido/lambda-ja-tokenizer/releases
+https://github.com/KunihikoKido/aws-lambda-ja-tokenizer/releases
