@@ -17,7 +17,7 @@ LAMBDA_HANDLER = 'lambda_handler'
 LAMBDA_FILE = 'lambda_function.py'
 LAMBDA_EVENT = 'event.json'
 
-MECAB_INSTALL_PREFIX = os.path.join(BASE_PATH, 'local')
+INSTALL_PREFIX = os.path.join(BASE_PATH, 'local')
 
 
 # MeCab
@@ -29,7 +29,7 @@ def install_mecab():
             local('wget http://mecab.googlecode.com/files/{}.tar.gz'.format(pkg_name))
             local('tar zvxf {}.tar.gz'.format(pkg_name))
         with lcd(pkg_name):
-            local('./configure --prefix={} --enable-utf8-only'.format(MECAB_INSTALL_PREFIX))
+            local('./configure --prefix={} --enable-utf8-only'.format(INSTALL_PREFIX))
             local('make && make install')
 
 
@@ -41,8 +41,8 @@ def install_mecab_ipadic():
             local('wget http://mecab.googlecode.com/files/{}.tar.gz'.format(pkg_name))
             local('tar zvxf {}.tar.gz'.format(pkg_name))
             local('nkf --overwrite -Ew {}/*'.format(pkg_name))
-        with lcd(pkg_name), path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'):
-            local('{}/libexec/mecab/mecab-dict-index -f utf-8 -t utf-8'.format(MECAB_INSTALL_PREFIX))
+        with lcd(pkg_name), path(os.path.join(INSTALL_PREFIX, 'bin'), behavior='prepend'):
+            local('{}/libexec/mecab/mecab-dict-index -f utf-8 -t utf-8'.format(INSTALL_PREFIX))
             local('./configure')
             local('make install')
 
@@ -50,7 +50,7 @@ def install_python_modules():
     if platform.system() == 'Linux':
         local('echo -e "[install]\ninstall-purelib=\$base/lib64/python" > setup.cfg')
 
-    with lcd(BASE_PATH), path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'):
+    with lcd(BASE_PATH), path(os.path.join(INSTALL_PREFIX, 'bin'), behavior='prepend'):
         local('pip install --upgrade -r requirements.txt -t {}'.format(LIB_PATH))
 
 def install_mecab_neologd():
@@ -62,8 +62,8 @@ def install_mecab_neologd():
             local('git clone --depth 1 https://github.com/neologd/{}.git'.format(pkg_name))
             local('xz -dkv {}/seed/mecab-user-dict-seed.*.csv.xz'.format(pkg_name))
             local('mv {}/seed/mecab-user-dict-seed.*.csv {}/'.format(pkg_name, ipadic_pkg_name))
-        with lcd(ipadic_pkg_name), path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'):
-            local('{}/libexec/mecab/mecab-dict-index -f utf-8 -t utf-8'.format(MECAB_INSTALL_PREFIX))
+        with lcd(ipadic_pkg_name), path(os.path.join(INSTALL_PREFIX, 'bin'), behavior='prepend'):
+            local('{}/libexec/mecab/mecab-dict-index -f utf-8 -t utf-8'.format(INSTALL_PREFIX))
             local('make install')
 
 
@@ -83,7 +83,7 @@ def setup():
 def clean():
     local('rm -f lambda_function.zip')
     local('rm -rf {}'.format(LIB_PATH))
-    local('rm -rf {}'.format(MECAB_INSTALL_PREFIX))
+    local('rm -rf {}'.format(INSTALL_PREFIX))
     local('rm -rf {}'.format(TEMP_DIR))
 
 @task
