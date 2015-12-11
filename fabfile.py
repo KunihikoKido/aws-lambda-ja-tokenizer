@@ -63,7 +63,7 @@ def install_mecab_neologd():
             local('git clone --depth 1 https://github.com/neologd/{}.git'.format(pkg_name))
             local('xz -dkv {}/seed/mecab-user-dict-seed.*.csv.xz'.format(pkg_name))
             local('mv {}/seed/mecab-user-dict-seed.*.csv {}/'.format(pkg_name, ipadic_pkg_name))
-        with lcd(ipadic_pkg_name), path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend')):
+        with lcd(ipadic_pkg_name), path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'):
             local('{}/libexec/mecab/mecab-dict-index -f utf-8 -t utf-8'.format(MECAB_INSTALL_PREFIX))
             local('make install')
 
