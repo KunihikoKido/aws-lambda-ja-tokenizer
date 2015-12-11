@@ -35,13 +35,13 @@ def install_mecab():
 def install_mecab_ipadic():
     pkg_name = 'mecab-ipadic-2.7.0-20070801'
 
-    with lcd(TEMP_DIR), path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'):
+    with lcd(TEMP_DIR):
         if not os.path.exists(os.path.join(TEMP_DIR, pkg_name)):
             local('wget http://mecab.googlecode.com/files/{}.tar.gz'.format(pkg_name))
             local('tar zvxf {}.tar.gz'.format(pkg_name))
             local('nkf --overwrite -Ew {}/*'.format(pkg_name))
-        with lcd(pkg_name), path(os.path.join(MECAB_INSTALL_PREFIX, 'libexec', 'mecab')):
-            local('mecab-dict-index -f utf-8 -t utf-8')
+        with lcd(pkg_name), path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'):
+            local('{}/libexec/mecab/mecab-dict-index -f utf-8 -t utf-8'.format(MECAB_INSTALL_PREFIX))
             local('./configure')
             local('make install')
 
