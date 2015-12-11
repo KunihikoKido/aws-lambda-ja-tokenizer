@@ -153,13 +153,13 @@ source ~/env/bin/activate
 cd aws-lambda-ja-tokenizer
 
 # 2. Update function code on AWS Lambda.
-fab awsupdate
+fab aws-lambda-update-function-code
 ```
 
 ### Custom function name
 
 ```bash
-fab awsupdate:function1
+fab aws-lambda-update-function-code:function1
 ```
 
 ## Invoke function on AWS Lambda
@@ -170,13 +170,13 @@ source ~/env/bin/activate
 cd aws-lambda-ja-tokenizer
 
 # 2. Update function code on AWS Lambda.
-fab awsinvoke
+fab aws-lambda-invoke
 ```
 
 ### Custom function name
 
 ```bash
-fab awsupdate:function1
+fab aws-lambda-invoke:function1
 ```
 
 ## Snapshot Builds

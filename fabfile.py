@@ -120,8 +120,8 @@ def makezip():
     with lcd(LIB_PATH):
         local('zip -r9 {} * -x@{}'.format(ZIP_FILE, ZIP_EXCLUDE_FILE))
 
-@task
-def awsupdate(function_name=LAMBDA_FUNCTION_NAME):
+@task(name='aws-lambda-update-function-code')
+def aws_lambda_update_function_conde(function_name=LAMBDA_FUNCTION_NAME):
     """
     Update function code on AWS Lambda.
     """
@@ -135,8 +135,8 @@ def awsupdate(function_name=LAMBDA_FUNCTION_NAME):
             --zip-file fileb://{}
         """.format(function_name, ZIP_FILE))
 
-@task
-def awsinvoke(function_name=LAMBDA_FUNCTION_NAME):
+@task(name='aws-lambda-invoke')
+def aws_lambda_invoke(function_name=LAMBDA_FUNCTION_NAME):
     """
     Invoke function on AWS Lambda.
     """
