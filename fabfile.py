@@ -7,6 +7,7 @@ from fabric.api import lcd
 from fabric.api import local
 from fabric.api import shell_env
 from fabric.api import task
+from fabric.api import path
 from fabric.contrib.console import confirm
 
 BASE_PATH = os.getcwd()
