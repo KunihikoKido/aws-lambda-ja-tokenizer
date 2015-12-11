@@ -48,7 +48,7 @@ def install_mecab_ipadic():
 
 @task
 def install_python_modules():
-    if platform.system() is 'Linux':
+    if platform.system() == 'Linux':
         local('echo -e "[install]\ninstall-purelib=\$base/lib64/python" > setup.cfg')
 
     with lcd(BASE_PATH), path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'):
