@@ -4,6 +4,8 @@ import subprocess
 import json
 import collections
 
+from settings import logger
+
 libdir = os.path.join(os.getcwd(), 'local', 'lib')
 
 def force_utf8(data):
@@ -17,20 +19,19 @@ def force_utf8(data):
         return data
 
 def lambda_handler(event, context):
+    logger.debug(json.dumps(event, ensure_ascii=False, indent=2))
+
     event = force_utf8(event)
     params = {
         "libdir": libdir,
         "sentence": event.get('sentence', ''),
         "stoptags": event.get('stoptags', ''),
-        "enabled_unk": event.get('enabled_unk', False)
+        "unk_feature": event.get('unk_feature', False)
     }
 
-    command = """
-    LD_LIBRARY_PATH={libdir} \
-        python tokenizer.py "{sentence}" "{stoptags}" "{enabled_unk}"
-    """.format(**params)
+    command = 'LD_LIBRARY_PATH={libdir} python tokenizer.py "{sentence}" "{stoptags}" "{unk_feature}"'.format(**params)
+    logger.debug(command)
     tokens = subprocess.check_output(command, shell=True)
-
-    print(tokens)
+    logger.debug(tokens)
 
     return json.loads(tokens)

@@ -8,7 +8,7 @@ from fabric.contrib.console import confirm
 
 BASE_PATH = os.getcwd()
 LIB_PATH = os.path.join(BASE_PATH, 'lib')
-TEMP_DIR = os.path.join(BASE_PATH, '.tmp')
+TEMP_DIR = os.path.join(BASE_PATH, 'tmp')
 
 ZIP_FILE = os.path.join(BASE_PATH, 'lambda_function.zip')
 ZIP_EXCLUDE_FILE = os.path.join(BASE_PATH, 'exclude.lst')
@@ -84,9 +84,9 @@ def setup():
 @task
 def clean():
     local('rm -f lambda_function.zip')
-    local('rm -rf lib')
-    local('rm -rf local')
-    local('rm -rf .tmp')
+    local('rm -rf {}'.format(LIB_PATH))
+    local('rm -rf {}'.format(MECAB_INSTALL_PREFIX))
+    local('rm -rf {}'.format(TEMP_DIR))
 
 @task
 def run(eventfile=LAMBDA_EVENT):
