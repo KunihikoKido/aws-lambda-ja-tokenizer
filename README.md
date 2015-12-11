@@ -101,6 +101,14 @@ cd aws-lambda-ja-tokenizer
 fab setup
 ```
 
+> **注意**
+> mecab-ipadic-neologd をシステム辞書に含める場合は、``fab setup`` 以下の問いで``y``を入力してください。
+>
+> ``Do you want to install mecab-ipadic-neologd? [y/N] ``
+>
+> ただし、サイズが大きいためLambdaのパッケージサイズ制限を超えてしまいます。。
+
+
 ## Run lambda function on local machine
 ローカルでLambda関数を実行するには、``fab run``コマンドを実行します。
 
