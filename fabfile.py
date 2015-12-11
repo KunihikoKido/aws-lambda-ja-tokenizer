@@ -46,7 +46,6 @@ def install_mecab_ipadic():
             local('./configure')
             local('make install')
 
-@task
 def install_python_modules():
     if platform.system() == 'Linux':
         local('echo -e "[install]\ninstall-purelib=\$base/lib64/python" > setup.cfg')
@@ -54,7 +53,6 @@ def install_python_modules():
     with lcd(BASE_PATH), path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'):
         local('pip install --upgrade -r requirements.txt -t {}'.format(LIB_PATH))
 
-@task
 def install_mecab_neologd():
     pkg_name = 'mecab-ipadic-neologd'
     ipadic_pkg_name = 'mecab-ipadic-2.7.0-20070801'
@@ -89,13 +87,13 @@ def clean():
     local('rm -rf {}'.format(TEMP_DIR))
 
 @task
-def run(eventfile=LAMBDA_EVENT):
+def invoke(eventfile=LAMBDA_EVENT):
     with lcd(BASE_PATH), shell_env(PYTHONPATH=LIB_PATH):
         local("python-lambda-local -l {} -f {} {} {}".format(
             LIB_PATH, LAMBDA_HANDLER, LAMBDA_FILE, eventfile))
 
 @task
-def bundle():
+def makezip():
     with lcd(BASE_PATH):
         local('rm -f {}'.format(ZIP_FILE))
         local('zip -r9 {} * -x @{}'.format(ZIP_FILE, ZIP_EXCLUDE_FILE))

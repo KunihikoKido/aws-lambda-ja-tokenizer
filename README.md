@@ -110,7 +110,7 @@ fab setup
 
 
 ## Run lambda function on local machine
-ローカルでLambda関数を実行するには、``fab run``コマンドを実行します。
+ローカルでLambda関数を実行するには、``fab invoke``コマンドを実行します。
 
 ```bash
 # 1. Activate virtualenv
@@ -118,7 +118,7 @@ source ~/env/bin/activate
 cd aws-lambda-ja-tokenizer
 
 # 2. Run lambda function on local machine
-fab run
+fab invoke
 ```
 
 #### Custom event
@@ -127,7 +127,7 @@ fab run
 以下の例は、新たに作成した``custom-event.json``をインプットイベントに指定して実行する例です。
 
 ```bash
-fab run:custom-event.json
+fab invoke:custom-event.json
 ```
 
 
@@ -140,7 +140,7 @@ source ~/env/bin/activate
 cd aws-lambda-ja-tokenizer
 
 # 2 Make bundle zip for Lambda function
-fab bundle
+fab makezip
 ```
 ※ ZIPファイルは10MB超えるので、S3経由アップロードしてください。
 
