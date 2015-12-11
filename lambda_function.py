@@ -21,13 +21,16 @@ def lambda_handler(event, context):
     params = {
         "libdir": libdir,
         "sentence": event.get('sentence', ''),
-        "stoptags": event.get('stoptags', '')
+        "stoptags": event.get('stoptags', ''),
+        "enabled_unk": event.get('enabled_unk', False)
     }
 
     command = """
     LD_LIBRARY_PATH={libdir} \
-        python tokenizer.py "{sentence}" "{stoptags}"
+        python tokenizer.py "{sentence}" "{stoptags}" "{enabled_unk}"
     """.format(**params)
     tokens = subprocess.check_output(command, shell=True)
+
+    print(tokens)
 
     return json.loads(tokens)

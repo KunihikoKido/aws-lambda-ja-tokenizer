@@ -17,6 +17,7 @@ lambda_function.lambda_handler
 
 * ``sentence``: 形態素解析対象の文字列
 * ``stoptags``: 解析結果から除外したい品詞タグ（※ 複数設定する場合はカンマ区切りで指定可能）
+* ``enabled_unk``: 未知語を表示する。このフラグを ``true`` にすると未知語の品詞推定をやめ、未知語は常に "未知語" 品詞を出力します。default to ``false``
 
 Input event sample:
 ```python

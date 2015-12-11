@@ -13,11 +13,15 @@ get_part_of_speech = lambda s: '-'.join([v for v in s.split(',')[:4] if v != '*'
 get_reading = lambda s: s.split(',')[7]
 get_base_form = lambda s: s.split(',')[6]
 
-def tokenize(sentence, stoptags=[]):
+def tokenize(sentence, stoptags=[], enabled_unk=False):
     stoptags += DEFAULT_STOPTAGS
 
-    option = "-d{dicdir} -r{rcfile}".format(dicdir=dicdir, rcfile=rcfile)
-    t = MeCab.Tagger(option)
+    options = ["-d{}".format(dicdir), "-r{}".format(rcfile),]
+
+    if enabled_unk:
+        options.append('--unk-feature 未知語,*,*,*,*,*,*,*,*')
+
+    t = MeCab.Tagger(" ".join(options))
     m = t.parseToNode(sentence)
 
     tokens = []
@@ -45,5 +49,6 @@ def tokenize(sentence, stoptags=[]):
 if __name__ == '__main__':
     sentence = sys.argv[1]
     stoptags = sys.argv[2].split(',')
-    tokens = tokenize(sentence, stoptags)
-    print(json.dumps(tokens, ensure_ascii=False))
+    enabled_unk = True if sys.argv[3] == 'True' else False
+    tokens = tokenize(sentence, stoptags, enabled_unk)
+    print(json.dumps(tokens, ensure_ascii=False, indent=2))

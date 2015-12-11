@@ -3,43 +3,70 @@ print os.getcwd()
 import zipfile
 
 from fabric.api import local, shell_env, lcd, env, task, settings, path
+from fabric.contrib.console import confirm
 
-BASE_DIR = os.getcwd()
-TEMP_DIR = os.path.join(BASE_DIR, '.tmp')
+BASE_PATH = os.getcwd()
+LIB_PATH = os.path.join(BASE_PATH, 'lib')
+TEMP_DIR = os.path.join(BASE_PATH, '.tmp')
 
-ZIP_FILE = os.path.join(BASE_DIR, 'lambda_function.zip')
-ZIP_EXCLUDE_FILE = os.path.join(BASE_DIR, 'exclude.lst')
+ZIP_FILE = os.path.join(BASE_PATH, 'lambda_function.zip')
+ZIP_EXCLUDE_FILE = os.path.join(BASE_PATH, 'exclude.lst')
 
-LAMBDA_HANDER = 'lambda_handler'
+LAMBDA_HANDLER = 'lambda_handler'
 LAMBDA_FILE = 'lambda_function.py'
 LAMBDA_EVENT = 'event.json'
 
-MECAB_INSTALL_PREFIX = os.path.join(BASE_DIR, 'local')
+MECAB_INSTALL_PREFIX = os.path.join(BASE_PATH, 'local')
 
 
 # MeCab
 def install_mecab():
+    pkg_name = 'mecab-0.996'
+
     with lcd(TEMP_DIR):
-        if not os.path.exists(os.path.join(TEMP_DIR, 'mecab-0.996')):
-            local('wget http://mecab.googlecode.com/files/mecab-0.996.tar.gz')
-            local('tar zvxf mecab-0.996.tar.gz')
-        with lcd('mecab-0.996'):
-            local('./configure --prefix={}'.format(MECAB_INSTALL_PREFIX))
+        if not os.path.exists(os.path.join(TEMP_DIR, pkg_name)):
+            local('wget http://mecab.googlecode.com/files/{}.tar.gz'.format(pkg_name))
+            local('tar zvxf {}.tar.gz'.format(pkg_name))
+        with lcd(pkg_name):
+            local('./configure --prefix={} --enable-utf8-only'.format(MECAB_INSTALL_PREFIX))
             local('make && make install')
 
 
 def install_mecab_ipadic():
-    with path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'), lcd(TEMP_DIR):
-        if not os.path.exists(os.path.join(TEMP_DIR, 'mecab-ipadic-2.7.0-20070801')):
-            local('wget http://mecab.googlecode.com/files/mecab-ipadic-2.7.0-20070801.tar.gz')
-            local('tar zvxf mecab-ipadic-2.7.0-20070801.tar.gz')
-        with lcd('mecab-ipadic-2.7.0-20070801'):
-            local('./configure --prefix={} --with-charset=utf-8'.format(MECAB_INSTALL_PREFIX))
-            local('make && make install')
+    pkg_name = 'mecab-ipadic-2.7.0-20070801'
 
+    with lcd(TEMP_DIR), path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'):
+        if not os.path.exists(os.path.join(TEMP_DIR, pkg_name)):
+            local('wget http://mecab.googlecode.com/files/{}.tar.gz'.format(pkg_name))
+            local('tar zvxf {}.tar.gz'.format(pkg_name))
+            local('nkf --overwrite -Ew {}/*'.format(pkg_name))
+        with lcd(pkg_name), path(os.path.join(MECAB_INSTALL_PREFIX, 'libexec', 'mecab')):
+            local('mecab-dict-index -f utf-8 -t utf-8')
+            local('./configure')
+            local('make install')
+
+@task
 def install_python_modules():
-    with path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'), lcd(BASE_DIR):
-        local('pip install -r requirements.txt')
+    if platform.system() is 'Linux':
+        local('echo -e "[install]\ninstall-purelib=\$base/lib64/python" > setup.cfg')
+
+    with lcd(BASE_PATH), path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'):
+        local('pip install --upgrade -r requirements.txt -t {}'.format(LIB_PATH))
+
+@task
+def install_mecab_neologd():
+    pkg_name = 'mecab-ipadic-neologd'
+    ipadic_pkg_name = 'mecab-ipadic-2.7.0-20070801'
+
+    with lcd(TEMP_DIR), path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'):
+        if not os.path.exists(os.path.join(TEMP_DIR, pkg_name)):
+            local('git clone --depth 1 https://github.com/neologd/{}.git'.format(pkg_name))
+            local('xz -dkv {}/seed/mecab-user-dict-seed.*.csv.xz'.format(pkg_name))
+            local('mv {}/seed/mecab-user-dict-seed.*.csv {}/'.format(pkg_name, ipadic_pkg_name))
+        with lcd(ipadic_pkg_name), path(os.path.join(MECAB_INSTALL_PREFIX, 'libexec', 'mecab')):
+            local('mecab-dict-index -f utf-8 -t utf-8')
+            local('make install')
+
 
 @task
 def setup():
@@ -50,19 +77,27 @@ def setup():
     install_mecab_ipadic()
     install_python_modules()
 
+    if confirm('Do you want to install mecab-ipadic-neologd?', default=False):
+        install_mecab_neologd()
+
+@task
+def clean():
+    local('rm -f lambda_function.zip')
+    local('rm -rf lib')
+    local('rm -rf local')
+    local('rm -rf .tmp')
+
 @task
 def run(eventfile=LAMBDA_EVENT):
-    with lcd(BASE_DIR):
-        local("python-lambda-local -f {} {} {}".format(LAMBDA_HANDER, LAMBDA_FILE, eventfile))
+    with lcd(BASE_PATH):
+        local("python-lambda-local -l {} -f {} {} {}".format(
+            LIB_PATH, LAMBDA_HANDLER, LAMBDA_FILE, eventfile))
 
 @task
 def bundle():
-    with lcd(BASE_DIR):
+    with lcd(BASE_PATH):
         local('rm -f {}'.format(ZIP_FILE))
         local('zip -r9 {} * -x @{}'.format(ZIP_FILE, ZIP_EXCLUDE_FILE))
 
-    with settings(warn_only=True), lcd('$VIRTUAL_ENV/lib/python2.7/dist-packages'):
-        local('zip -r9 {} * -x @{}'.format(ZIP_FILE, ZIP_EXCLUDE_FILE))
-
-    with settings(warn_only=True), lcd('$VIRTUAL_ENV/lib/python2.7/site-packages'):
-        local('zip -r9 {} * -x @{}'.format(ZIP_FILE, ZIP_EXCLUDE_FILE))
+    with lcd(LIB_PATH):
+        local('zip -r9 {} * -x@{}'.format(ZIP_FILE, ZIP_EXCLUDE_FILE))
