@@ -90,7 +90,7 @@ def clean():
 
 @task
 def run(eventfile=LAMBDA_EVENT):
-    with lcd(BASE_PATH), env_shell('PYTHONPATH=./lib'):
+    with lcd(BASE_PATH), shell_env(PYTHONPATH='./lib'):
         local("python-lambda-local -l {} -f {} {} {}".format(
             LIB_PATH, LAMBDA_HANDLER, LAMBDA_FILE, eventfile))
 
