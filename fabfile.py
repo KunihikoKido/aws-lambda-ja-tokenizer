@@ -58,13 +58,13 @@ def install_mecab_neologd():
     pkg_name = 'mecab-ipadic-neologd'
     ipadic_pkg_name = 'mecab-ipadic-2.7.0-20070801'
 
-    with lcd(TEMP_DIR), path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend'):
+    with lcd(TEMP_DIR):
         if not os.path.exists(os.path.join(TEMP_DIR, pkg_name)):
             local('git clone --depth 1 https://github.com/neologd/{}.git'.format(pkg_name))
             local('xz -dkv {}/seed/mecab-user-dict-seed.*.csv.xz'.format(pkg_name))
             local('mv {}/seed/mecab-user-dict-seed.*.csv {}/'.format(pkg_name, ipadic_pkg_name))
-        with lcd(ipadic_pkg_name), path(os.path.join(MECAB_INSTALL_PREFIX, 'libexec', 'mecab')):
-            local('mecab-dict-index -f utf-8 -t utf-8')
+        with lcd(ipadic_pkg_name), path(os.path.join(MECAB_INSTALL_PREFIX, 'bin'), behavior='prepend')):
+            local('{}/libexec/mecab/mecab-dict-index -f utf-8 -t utf-8'.format(MECAB_INSTALL_PREFIX))
             local('make install')
 
 
