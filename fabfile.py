@@ -35,6 +35,14 @@ MECAB_IPADIC_PKG = 'mecab-ipadic-2.7.0-20070801'
 MECAB_NEOLOGD_PKG = 'mecab-ipadic-neologd'
 
 class SetupTask(BaseSetupTask):
+    def install_python_modules(self):
+        if platform.system() == 'Linux':
+            local('echo -e "[install]\ninstall-purelib=\$base/lib64/python" > setup.cfg')
+
+        options = dict(requirements=self.requirements, lib_path=self.lib_path)
+        with lcd(BASE_PATH), path(os.path.join(self.install_prefix, 'bin'), behavior='prepend'):
+            local('pip install --upgrade -r {requirements} -t {lib_path}'.format(**options))
+
     def pre_task(self):
         with lcd(self.tempdir):
             local('rm -rf *')
@@ -61,15 +69,6 @@ class SetupTask(BaseSetupTask):
             local('{}/libexec/mecab/mecab-dict-index -f utf-8 -t utf-8'.format(self.install_prefix))
             local('./configure')
             local('make install')
-
-    def install_python_modules(self):
-        if platform.system() == 'Linux':
-            local('echo -e "[install]\ninstall-purelib=\$base/lib64/python" > setup.cfg')
-
-        options = dict(requirements=self.requirements, lib_path=self.lib_path)
-        with lcd(BASE_PATH), path(os.path.join(self.install_prefix, 'bin'), behavior='prepend'):
-            local('pip install --upgrade -r {requirements} -t {lib_path}'.format(**options))
-
 
     def install_mecab_neologd(self, pkg_name, mecab_ipadic):
         local('git clone --depth 1 https://github.com/neologd/{}.git'.format(pkg_name))
