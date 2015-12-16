@@ -42,6 +42,7 @@ def tokenize(sentence, stoptags=[], unk_feature=False):
             "pos": part_of_speech,
             "reading": reading,
             "baseform": base_form,
+            "stat": m.stat,
         }
 
         if part_of_speech not in stoptags:
