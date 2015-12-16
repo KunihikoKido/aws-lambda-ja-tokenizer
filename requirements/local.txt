@@ -1,0 +1,4 @@
+fabric
+awscli
+python-lambda-local
+git+https://github.com/kunihikokido/fabric-aws-lambda.git

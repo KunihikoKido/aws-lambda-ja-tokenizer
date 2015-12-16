@@ -4,6 +4,7 @@
 *.egg-info
 *.pyc
 dist/*
+env/*
 event.json
 exclude.lst
 fabfile.py
@@ -16,6 +17,6 @@ local/include/*
 local/libexec/*
 local/share/*
 README.md
-requirements.txt
+requirements*
 setup.cfg
 tmp/*

@@ -34,6 +34,12 @@ Input event sample:
 * ``baseform``: 原型
 * ``surface``: 形態素の文字列情報
 * ``feature``:  CSVで表記された素性情報
+* ``stat``: 形態素の種類
+  * 0: MECAB_NOR_NODE
+  * 1: MECAB_UNK_NODE
+  * 2: MECAB_BOS_NODE
+  * 3: MECAB_EOS_NODE
+
 
 Execution result sample:
 ```python
@@ -83,23 +89,18 @@ Execution result sample:
 なお、MeCab本体とIPA辞書は、``./local``配下にインストールされます。
 
 ```bash
-# 1. Create a virtualenv
+# 1. Clone this repository with AWS Lambda function name.
+git clone https://github.com/KunihikoKido/aws-lambda-ja-tokenizer.git ja-tokenizer
+
+# 2. Create and Activate a virtualenv
+cd ja-tokenizer
 virtualenv env
+source env/bin/activate
 
-# 2. Activate the virtualenv
-source ~/env/bin/activate
+# 3. Install python modules for local machine.
+pip install -r requirements/local.txt
 
-# 3. Install fabric and python-lambda-local
-pip install fabric
-pip install awscli
-pip install python-lambda-local
-pip install git+https://github.com/kunihikokido/fabric-aws-lambda.git
-
-# 4. Clone repository
-git clone https://github.com/KunihikoKido/aws-lambda-ja-tokenizer.git
-
-# 5. Install requirements modules
-cd aws-lambda-ja-tokenizer
+# 4. Compile and Install MeCab and etc.
 fab setup
 ```
 
@@ -142,22 +143,10 @@ fab makezip
 fab aws-updatecode
 ```
 
-### Custom function name
-
-```bash
-fab aws-updatecode:function1
-```
-
 ## Invoke function on AWS Lambda
 
 ```bash
 fab aws-invoke
-```
-
-### Custom function name
-
-```bash
-fab aws-invoke:function1
 ```
 
 ## Get function configuration on AWS Lambda
