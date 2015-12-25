@@ -159,3 +159,27 @@ fab aws-getconfig
 ビルド済みの``lambda_function.zip``は以下のURLを参照してください。
 
 https://github.com/KunihikoKido/aws-lambda-ja-tokenizer/releases
+
+## with Amazon API Gateway
+### _Example Settings_
+
+_Method and Resources:_
+```
+GET /tokenize
+```
+_Query Strings:_
+* ``sentence``: センテンス
+* ``stoptags``: 除外品詞タグ
+
+_Request mapping template:_
+```json
+{
+  "sentence": "$util.urlDecode($input.params('sentence'))",
+  "stoptags": "$util.urlDecode($input.params('stoptags'))"
+}
+```
+
+_Example Request:_
+```bash
+GET /tokenize?sentence=%E4%BB%8A%E6%97%A5%E3%81%AF%E8%89%AF%E3%81%84%E5%A4%A9%E6%B0%97%E3%81%A7%E3%81%99
+```
