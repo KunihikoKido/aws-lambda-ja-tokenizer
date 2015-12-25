@@ -4,7 +4,11 @@ import subprocess
 import json
 import collections
 
-from settings import logger
+import settings
+
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(settings.LOG_LEVEL)
 
 libdir = os.path.join(os.getcwd(), 'local', 'lib')
 

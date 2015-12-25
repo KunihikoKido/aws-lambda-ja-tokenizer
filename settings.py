@@ -1,6 +1,8 @@
 import logging
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+
+DEBUG = False
+
+LOG_LEVEL = logging.INFO
 
 try:
     from local_settings import *
