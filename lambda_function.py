@@ -1,8 +1,5 @@
 # coding=utf-8
 import os
-import json
-import collections
-
 import settings
 
 import logging
@@ -19,15 +16,12 @@ import MeCab
 # prepare Tagger
 dicdir = os.path.join(os.getcwd(), 'local', 'lib', 'mecab', 'dic', 'ipadic')
 rcfile = os.path.join(os.getcwd(), 'local', 'etc', 'mecabrc')
-print "-d{} -r{}".format(dicdir, rcfile)
 default_tagger = MeCab.Tagger("-d{} -r{}".format(dicdir, rcfile))
 unk_tagger = MeCab.Tagger("-d{} -r{} --unk-feature 未知語,*,*,*,*,*,*,*,*".format(dicdir, rcfile))
 
 DEFAULT_STOPTAGS = ['BOS/EOS']
 
 def lambda_handler(event, context):
-    logger.debug(json.dumps(event, ensure_ascii=False, indent=2))
-
     sentence = event.get('sentence', '').encode('utf-8')
     stoptags = event.get('stoptags', '').encode('utf-8').split(',') + DEFAULT_STOPTAGS
     unk_feature = event.get('unk_feature', False)
