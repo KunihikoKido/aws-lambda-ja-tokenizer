@@ -55,14 +55,14 @@ class SetupTask(BaseSetupTask):
                 self.install_mecab_neologd(MECAB_NEOLOGD_PKG, MECAB_IPADIC_PKG)
 
     def install_mecab(self, pkg_name):
-        local('wget http://mecab.googlecode.com/files/{}.tar.gz'.format(pkg_name))
+        local('wget -O mecab-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE"')
         local('tar zvxf {}.tar.gz'.format(pkg_name))
         with lcd(pkg_name):
             local('./configure --prefix={} --enable-utf8-only'.format(self.install_prefix))
             local('make && make install')
 
     def install_mecab_ipadic(self, pkg_name):
-        local('wget http://mecab.googlecode.com/files/{}.tar.gz'.format(pkg_name))
+        local('wget -O mecab-ipadic-2.7.0-20070801.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7MWVlSDBCSXZMTXM"')
         local('tar zvxf {}.tar.gz'.format(pkg_name))
         local('nkf --overwrite -Ew {}/*'.format(pkg_name))
         with lcd(pkg_name), path(os.path.join(self.install_prefix, 'bin'), behavior='prepend'):
